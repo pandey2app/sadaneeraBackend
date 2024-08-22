@@ -2,7 +2,7 @@ import { mongo } from "mongoose";
 import userModel from "../models/userModel.js";
 
 const getAllUsers = async (req, res)=>{
-    const {category : userCategory, name, isActive, sort, select, page, limit} = req.query;
+    let {category : userCategory, name, isActive, sort, select, page, limit} = req.query;
     let queryObject = {};
     if(userCategory){
         queryObject.userCategory = { $regex: userCategory, $options: 'i'};
