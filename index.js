@@ -1,32 +1,23 @@
-import dotenv from 'dotenv';
-dotenv.config()
-import express  from 'express'
+import express from 'express';
 import serverless from 'serverless-http';
+import connectDB from './db/connect.js';
+import usersRoutes from './routes/usersRouter.js';
+
 const app = express();
 
-import users_routes from'./routes/usersRouter.js'
-import connectDB from './db/connect.js'
+app.use(express.json());
+app.use('/api/users', usersRoutes);
 
-const port = process.env.PORT || 5000;
-
-app.get('/', (req, res) => {
-    res.send('okay im live')
-})
-
-app.use('/api/users', users_routes)
-
-const start = async ()=>{
-    try {        
-        await connectDB(process.env.MONGODB_URL)
-        app.listen(port, ()=>{
-            console.log(`listening on ${port}`);            
-        });
+app.get('/', async (req, res) => {
+    try {
+        console.log('Connecting to the database...');
+        await connectDB(process.env.MONGODB_URL);
+        console.log('Database connected.');
+        res.send('Hello, I am live!');
     } catch (error) {
-        console.log('hii i am not listening');
-        
-        console.log(error);
+        console.error('Error connecting to the database:', error);
+        res.status(500).send('Internal Server Error');
     }
-}
-start();
+});
 
 export default serverless(app);
