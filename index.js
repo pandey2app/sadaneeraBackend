@@ -21,6 +21,8 @@ const start = async ()=>{
             console.log(`listening on ${port}`);            
         });
     } catch (error) {
+        console.log('hii i am not listening');
+        
         console.log(error);
     }
 }
