@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config()
 import express  from 'express'
-import serverless from 'serverless-http';
+// import serverless from 'serverless-http';
 const app = express();
 
 import users_routes from'./routes/usersRouter.js'
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
     res.send('okay im live')
 })
 
-app.use('/api/users', users_routes)
+// app.use('/api/users', users_routes)
 
 const start = async ()=>{
     try {        
@@ -29,4 +29,4 @@ const start = async ()=>{
 }
 start();
 
-export default serverless(app);
+// export default serverless(app);
