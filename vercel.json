@@ -7,10 +7,7 @@
         }
     ],
     "routes" : [
-        // {
-        //     "src": "/api/users",
-        //     "dest": "index.js"
-        // },
+        
         {
             "src": "/(.*)",
             "dest":"/"
