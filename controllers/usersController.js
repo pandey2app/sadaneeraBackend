@@ -1,39 +1,73 @@
 import userModel from "../models/userModel.js";
 
-const getAllUsers = async (req, res)=>{
-    let {userCategory, name, isActive, sort, select, page, limit} = req.query;
+const getAllUsers = async (req, res) => {
+    let { userCategory, name, isActive, sort, select, page, limit } = req.query;
     let queryObject = {};
-    if(userCategory){
-        queryObject.userCategory = { $regex: userCategory, $options: 'i'};
-    } 
-    if(name){
-        queryObject.name = { $regex: name, $options: 'i'};
+
+    // Build the query object based on the filters
+    if (userCategory) {
+        queryObject.userCategory = { $regex: userCategory, $options: 'i' };
     }
-    if(isActive){
+    if (name) {
+        queryObject.name = { $regex: name, $options: 'i' };
+    }
+    if (isActive) {
         queryObject.isActive = isActive;
     }
 
-    const mongoQuery = userModel.find(queryObject)
+    // Initialize the aggregation pipeline
+    const pipeline = [];
 
-    if(sort){
-        let fixedSort = sort.split(',').join(' ');
-        mongoQuery.sort(fixedSort);
+    // Add the match stage to filter data based on the query object
+    if (Object.keys(queryObject).length > 0) {
+        pipeline.push({ $match: queryObject });
     }
 
-    if(select){
-        let fixedSelect = select.split(',').join(' ');
-        mongoQuery.select(fixedSelect);
+    // Add the sort stage if sorting is specified
+    if (sort) {
+        let sortFields = sort.split(',').map(field => ({
+            [field.startsWith('-') ? field.substring(1) : field]: field.startsWith('-') ? -1 : 1
+        }));
+
+        // Use $addFields to add lowercased fields for sorting
+        sortFields.forEach(sortField => {
+            const [key, order] = Object.entries(sortField)[0];
+            pipeline.push({
+                $addFields: {
+                    [`sort_${key}`]: { $toLower: `$${key}` }
+                }
+            });
+            pipeline.push({
+                $sort: { [`sort_${key}`]: order }
+            });
+        });
     }
-    
-    if(page || limit){
-        page = page || 1
-        limit = limit || 10;
-        const startIndex = (page - 1) * limit;
-        mongoQuery.skip(startIndex).limit(parseInt(limit));
+
+    // Add the projection stage if selecting specific fields
+    if (select) {
+        pipeline.push({ $project: select.split(',').reduce((acc, field) => ({ ...acc, [field]: 1 }), {}) });
     }
-    const users = await mongoQuery
-    res.status(200).json({users});
-}
+
+    // Pagination logic
+    if (page || limit) {
+        page = parseInt(page) || 1;
+        limit = parseInt(limit) || 10;
+        const skip = (page - 1) * limit;
+
+        pipeline.push({ $skip: skip }, { $limit: limit });
+    }
+
+    try {
+        const users = await userModel.aggregate(pipeline);
+        res.status(200).json({ users });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+
 const getAllUsersTesting = async (req, res)=>{
     const users = await userModel.find()
     res.status(200).json({users});
@@ -41,9 +75,21 @@ const getAllUsersTesting = async (req, res)=>{
 
 //add user
 const addUser = async (req, res)=>{
-    const {name, email, password, role, userCategory, art} = req.body;
-    const newUser = await userModel.create({name, email, password, role, userCategory, art});
-    res.status(201).json({newUser});
+    res.render('addUser')
+}
+
+const addUserToDB = async (req, res)=>{
+    console.log(req.body)
+    try {
+        const {name, email, password, role, userCategory, art} = req.body;
+        const newUser = await userModel.create({name, email, password, role, userCategory, art});
+        res.status(201).json({newUser});
+    } catch (error) {
+        console.log(error);
+        
+        res.status(500).json({error});
+    }
+   
 }
 
 //remove user
@@ -53,4 +99,4 @@ const removeUser = async (req, res)=>{
     res.status(201).json({deletedUser});
 }
 
-export {getAllUsers, getAllUsersTesting, addUser, removeUser}
+export {getAllUsers, getAllUsersTesting, addUser, addUserToDB, removeUser}
