@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
     res.send('okay im live')
 })
 
-// app.use('/api/users', users_routes)
+app.use('/api/users', users_routes)
 
 const start = async ()=>{
     try {        
