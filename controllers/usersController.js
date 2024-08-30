@@ -4,6 +4,10 @@ const getAllUsers = async (req, res) => {
     let { userCategory, name, isActive, sort, select, page, limit } = req.query;
     let queryObject = {};
 
+    if(!req.query){
+        const users = await userModel.find()
+        res.status(200).json({users});
+    }
     // Build the query object based on the filters
     if (userCategory) {
         queryObject.userCategory = { $regex: userCategory, $options: 'i' };
@@ -93,10 +97,12 @@ const addUserToDB = async (req, res)=>{
 }
 
 //remove user
-const removeUser = async (req, res)=>{
-    const {_id} = req.user;
-    const deletedUser = await userModel.findByIdAndDelete(_id);
-    res.status(201).json({deletedUser});
+const removeUserFromDB = async (req, res)=>{
+    const {id} = req.params;
+    console.log(id);
+    
+    // const deletedUser = await userModel.findByIdAndDelete(_id);
+    // res.status(201).json({deletedUser});
 }
 
-export {getAllUsers, getAllUsersTesting, addUser, addUserToDB, removeUser}
+export {getAllUsers, getAllUsersTesting, addUser, addUserToDB, removeUserFromDB}
