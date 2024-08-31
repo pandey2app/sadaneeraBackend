@@ -45,8 +45,8 @@ const userSchema = new mongoose.Schema({
     userCategory: {
         type: String,
         enum: {
-            values: ['user', 'writer', 'poet', 'actor', 'singer'],
-            message : "The category should be only user, writer, poet, actor, singer"
+            values: ['reader', 'writer', 'poet', 'actor', 'singer'],
+            message : "The category should be only reader, writer, poet, actor, singer"
         },
         default: 'user'
     },
