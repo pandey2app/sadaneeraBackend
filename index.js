@@ -5,6 +5,7 @@ const app = express();
 import cors from 'cors';
 
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 
 import users_routes from'./routes/usersRouter.js'
@@ -16,6 +17,10 @@ const port = process.env.PORT || 5000;
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Serve static files from the public directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'public')));
 // Configure CORS
 app.use(cors());
