@@ -4,6 +4,8 @@ import express  from 'express'
 const app = express();
 import cors from 'cors';
 
+import path from 'path';
+
 
 import users_routes from'./routes/usersRouter.js'
 import contactUs_routes from'./routes/contactUsRouter.js'
@@ -14,8 +16,7 @@ const port = process.env.PORT || 5000;
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public'));
-
+app.use(express.static(path.join(__dirname, 'public')));
 // Configure CORS
 app.use(cors());
 
