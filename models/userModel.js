@@ -74,13 +74,13 @@ userSchema.pre('save', function (next) {
     if (!this.image) {
         switch (this.gender) {
             case 'male':
-                this.image = '/images/maleUser.png'; 
+                this.image = '/img/maleUser.png'; 
                 break;
             case 'female':
-                this.image = '/images/femaleUser.png';
+                this.image = '/img/femaleUser.png';
                 break;
             default:
-                this.image = '/images/maleUser.png';
+                this.image = '/img/maleUser.png';
                 break;
         }
     }
