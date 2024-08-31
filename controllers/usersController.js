@@ -92,8 +92,8 @@ const addUser = async (req, res)=>{
 const addUserToDB = async (req, res)=>{
     console.log(req.body)
     try {
-        const {name, email, password, role, userCategory, art} = req.body;
-        const newUser = await userModel.create({name, email, password, role, userCategory, art});
+        const {name, email, image, mobile, birthDate, password, gender, state, district, role, userCategory, art, objective, isActive, createdAt, updatedAt} = req.body;
+        const newUser = await userModel.create({name, email, image, mobile, birthDate, password, gender, state, district, role, userCategory, art, objective, isActive, createdAt, updatedAt});
         res.status(201).json({newUser});
     } catch (error) {
         console.log(error);
