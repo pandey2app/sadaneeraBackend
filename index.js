@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config()
 import express  from 'express'
 const app = express();
+import cors from 'cors';
+
 
 import users_routes from'./routes/usersRouter.js'
 import connectDB from './db/connect.js'
@@ -12,6 +14,9 @@ const port = process.env.PORT || 5000;
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Configure CORS
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.send('okay im live')

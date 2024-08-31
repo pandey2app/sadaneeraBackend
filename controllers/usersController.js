@@ -7,6 +7,7 @@ const getAllUsers = async (req, res) => {
     if(!req.query){
         const users = await userModel.find()
         res.status(200).json({users});
+        return;
     }
     // Build the query object based on the filters
     if (userCategory) {
@@ -59,6 +60,12 @@ const getAllUsers = async (req, res) => {
         const skip = (page - 1) * limit;
 
         pipeline.push({ $skip: skip }, { $limit: limit });
+    }
+
+    if(pipeline.length === 0) {
+        pipeline.push({$match :{}});
+    }else{
+        console.log(pipeline)        
     }
 
     try {
