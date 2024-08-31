@@ -70,17 +70,18 @@ const userSchema = new mongoose.Schema({
     }
 })
 
+const root = 'https://sadaneera-backend.vercel.app'
 userSchema.pre('save', function (next) {
     if (!this.image) {
         switch (this.gender) {
             case 'male':
-                this.image = '/img/maleUser.png'; 
+                this.image = root+'/img/maleUser.png'; 
                 break;
             case 'female':
-                this.image = '/img/femaleUser.png';
+                this.image = root+'/img/femaleUser.png';
                 break;
             default:
-                this.image = '/img/maleUser.png';
+                this.image = root+'/img/maleUser.png';
                 break;
         }
     }
