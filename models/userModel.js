@@ -10,9 +10,33 @@ const userSchema = new mongoose.Schema({
         required: [true, 'email must be provided'],
         unique: true
     },
+    image:{
+        type: String,
+    },
+    birthdate:{
+        type: Date,
+    },
+    mobile: {
+        type: String,
+        required: [true, 'mobile must be provided'],
+        unique: true
+    },
     password: {
         type: String,
         required: [true, 'password must be provided'],
+    },
+    gender: {
+        type: String,
+        enum: {
+            values: ['male', 'female', 'other'],
+            message : "The gender should be only male, female, or other"
+        }
+    },
+    state: {
+        type: String,
+    },
+    district: {
+        type: String,
     },
     role: {
         type: String,
@@ -29,6 +53,9 @@ const userSchema = new mongoose.Schema({
     art: {
         type: String,
         default: 'reader'
+    },
+    objective: {
+        type: String,
     },
     isActive: {
         type: Boolean,

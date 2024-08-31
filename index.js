@@ -6,8 +6,8 @@ import cors from 'cors';
 
 
 import users_routes from'./routes/usersRouter.js'
+import contactUs_routes from'./routes/contactUsRouter.js'
 import connectDB from './db/connect.js'
-import { addUserToDB } from './controllers/usersController.js';
 
 const port = process.env.PORT || 5000;
 
@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/users', users_routes)
+app.use('/api/contactUs', contactUs_routes)
 
 
 const start = async ()=>{
