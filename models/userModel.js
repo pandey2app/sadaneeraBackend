@@ -69,4 +69,22 @@ const userSchema = new mongoose.Schema({
         type: Date
     }
 })
+
+userSchema.pre('save', function (next) {
+    if (!this.image) {
+        switch (this.gender) {
+            case 'male':
+                this.image = '/images/maleUser.png'; 
+                break;
+            case 'female':
+                this.image = '/images/femaleUser.png';
+                break;
+            default:
+                this.image = '/images/maleUser.png';
+                break;
+        }
+    }
+    next();
+});
+
 export default mongoose.model('User', userSchema);
