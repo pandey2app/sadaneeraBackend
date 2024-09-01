@@ -9,6 +9,10 @@ const contactUsSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    mobile: {
+        type: String,
+        required: true
+    },
     subject: {
         type: String,
         default: 'A message to sadaneera',
