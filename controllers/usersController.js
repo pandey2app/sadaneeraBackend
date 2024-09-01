@@ -1,10 +1,11 @@
 import userModel from "../models/userModel.js";
 
 const getAllUsers = async (req, res) => {
-    let { userCategory, name, isActive, sort, select, page, limit } = req.query;
+    let { userCategory, mobile, email, name, isActive, sort, select, page, limit } = req.query;
     let queryObject = {};
 
     if(!req.query){
+        console.log('No query')        
         const users = await userModel.find()
         res.status(200).json({users});
         return;
@@ -15,6 +16,12 @@ const getAllUsers = async (req, res) => {
     }
     if (name) {
         queryObject.name = { $regex: name, $options: 'i' };
+    }
+    if(mobile){
+        queryObject.mobile = mobile;
+    }
+    if(email){
+        queryObject.email = email;
     }
     if (isActive) {
         queryObject.isActive = isActive;
