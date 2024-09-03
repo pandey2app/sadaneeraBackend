@@ -1,8 +1,9 @@
 import dotenv from 'dotenv';
 dotenv.config()
 import express  from 'express'
-const app = express();
+export const app = express();
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -17,13 +18,18 @@ const port = process.env.PORT || 5000;
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
+
 
 // Serve static files from the public directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'public')));
 // Configure CORS
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+}));
 
 app.get('/', (req, res) => {
     res.send('okay im live')
@@ -40,9 +46,10 @@ const start = async ()=>{
             console.log(`listening on ${port}`);            
         });
     } catch (error) {
-        console.log('hii i am not listening');
+        console.log('Error while listening');
         
         console.log(error);
     }
 }
+
 start();
