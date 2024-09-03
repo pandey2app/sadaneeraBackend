@@ -84,10 +84,8 @@ const loginUser = async (req, res) => {
             const result = comparePassword(password, user.password);
             if (result) {
                 if (rememberMe) {
-                    console.log(generateCookie(30));
                     res.cookie("token", createToken({ email: user.email }), generateCookie(30)).send('Welcome mr. ' + user.name);
                 } else {
-                    console.log(generateCookie());
                     res.cookie("token", createToken({ email: user.email }), generateCookie()).send('Welcome mr. ' + user.name);
                 }
             } else {
