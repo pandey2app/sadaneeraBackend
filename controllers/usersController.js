@@ -1,21 +1,17 @@
-import cookieParser from "cookie-parser";
-import comparePassword from "../helpers/dcrypt.js";
-import generateHash from "../helpers/encrypt.js";
-import { createToken } from "../helpers/jwt.js";
 import userModel from "../models/userModel.js";
-import { cookieObject, generateCookie } from "../essentials/cookieObject.js";
 
 
 const getAllUsers = async (req, res) => {
     let { userCategory, mobile, email, name, isActive, sort, select, page, limit } = req.query;
-    let queryObject = {};
-    console.log(req.cookies.token);    
     if(!Object.keys(req.query).length){
         const users = await userModel.find()
         res.status(200).json({users});
         return;
     }
+
     // Build the query object based on the filters
+    let queryObject = {};
+    
     if (userCategory) {
         queryObject.userCategory = { $regex: userCategory, $options: 'i' };
     }
@@ -96,60 +92,5 @@ const getAllUsersTesting = async (req, res)=>{
     res.status(200).json({users});
 }
 
-const getUser = async (req, res)=>{
-    const {id} = req.params;
-    const user = await userModel.findById(id);
-    res.status(200).json({user});
-}
 
-const addUserToDB = async (req, res)=>{
-    try {
-        const {name, email, image, mobile, birthDate, password, gender, state, district, role, userCategory, art, objective, isActive, createdAt, updatedAt} = req.body;
-        const hashedPSW = generateHash(password)
-        
-        const user = await userModel.create({name, email, image, mobile, birthDate, password: hashedPSW, gender, state, district, role, userCategory, art, objective, isActive, createdAt, updatedAt});
-        const token = createToken({email: user.email})
-        res.cookie("token", token, generateCookie())
-        res.send('registered Successfully');
-    } catch (error) {
-        console.log(error);
-        
-        res.status(500).json({error});
-    }
-   
-}
-
-//remove user
-const removeUserFromDB = async (req, res)=>{
-    const {id} = req.params;
-    console.log(id);
-    
-    // const deletedUser = await userModel.findByIdAndDelete(_id);
-    // res.status(201).json({deletedUser});
-}
-
-//Login user
-const loginUser = async (req, res)=>{
-    const {email, password, rememberMe} = req.body;
-    console.log(email, password, rememberMe);
-
-    if(email && password){
-        const user = await userModel.findOne({email});
-        if(!user){
-            res.status(401).json({error: 'Invalid Credentials'});
-            return;
-        }
-        const result = comparePassword(password, user.password);
-        if(result){
-            if(rememberMe){
-                res.send('Welcome mr. ' + user.name).cookie('token', createToken({email: user.email}), generateCookie(30));
-            }else{
-                res.send('Welcome mr. ' + user.name).cookie('token', createToken({email: user.email}), generateCookie());
-            }
-        }else{
-            res.status(401).json({error: 'Invalid Credentials'});
-        }
-    }
-}
-
-export {getAllUsers, getAllUsersTesting, addUserToDB, removeUserFromDB, loginUser, getUser}
+export {getAllUsers, getAllUsersTesting}
