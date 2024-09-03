@@ -100,4 +100,9 @@ const loginUser = async (req, res) => {
     }
 }
 
-export { getUserByID, getUser, addUserToDB, removeUserFromDB, loginUser, getUserTest }
+const logoutUser = (req, res) => {
+    res.clearCookie("token");
+    res.send('Logged Out Successfully');
+}
+
+export { getUserByID, getUser, addUserToDB, removeUserFromDB, loginUser, getUserTest, logoutUser }
