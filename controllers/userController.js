@@ -83,10 +83,11 @@ const loginUser = async (req, res) => {
             }
             const result = comparePassword(password, user.password);
             if (result) {
+                user.isLoggedIn = true;
                 if (rememberMe) {
-                    res.cookie("token", createToken({ email: user.email }), generateCookie(30)).send('Welcome mr. ' + user.name);
+                    res.cookie("token", createToken({ email: user.email }), generateCookie(30)).json(user)
                 } else {
-                    res.cookie("token", createToken({ email: user.email }), generateCookie()).send('Welcome mr. ' + user.name);
+                    res.cookie("token", createToken({ email: user.email }), generateCookie()).json(user)
                 }
             } else {
                 res.status(401).json({ error: 'Invalid Credentials' });
@@ -101,6 +102,8 @@ const loginUser = async (req, res) => {
 }
 
 const logoutUser = (req, res) => {
+    console.log(req.cookies.token);
+    
     res.clearCookie("token");
     res.send('Logged Out Successfully');
 }
