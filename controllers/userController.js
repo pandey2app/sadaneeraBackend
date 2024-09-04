@@ -26,7 +26,7 @@ const getUserTest = async (req, res) => {
     const { email, password } = req.body;
     if (email && password) {
         const user = await userModel.findOne({email});
-        if(user){
+        if(user.name){
             if(comparePassword(password, user.password)){
                 const token = createToken({ email: user.email })
                 console.log(token)
@@ -77,7 +77,7 @@ const loginUser = async (req, res) => {
     if (email && password) {
         try {
             const user = await userModel.findOne({ email });
-            if (!user) {
+            if (!user.name) {
                 res.status(401).json({ error: 'Invalid Credentials' });
                 return;
             }
