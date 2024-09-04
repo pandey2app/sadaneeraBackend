@@ -84,6 +84,7 @@ const loginUser = async (req, res) => {
             const result = comparePassword(password, user.password);
             if (result) {
                 user.isLoggedIn = true;
+                await user.save()
                 if (rememberMe) {
                     res.cookie("token", createToken({ email: user.email }), generateCookie(30)).json(user)
                 } else {
@@ -101,8 +102,13 @@ const loginUser = async (req, res) => {
     }
 }
 
-const logoutUser = (req, res) => {
-    console.log(req.cookies.token);
+const logoutUser = async (req, res) => {
+    if(req.cookies.token){
+        const token = req.cookies.token;
+        const data = decryptToken(token);
+        console.log(data);
+        await userModel.findOneAndUpdate({email: data.email},{isLoggedIn : false})
+    }
     
     res.clearCookie("token");
     res.send('Logged Out Successfully');
