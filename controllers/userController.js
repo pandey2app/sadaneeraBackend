@@ -113,6 +113,7 @@ const logoutUser = async (req, res) => {
             console.log(data);
 
             await userModel.findOneAndUpdate(
+                { email: data.email },
                 { isLoggedIn: false }
             );
         } else {
