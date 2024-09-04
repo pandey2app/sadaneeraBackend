@@ -10,6 +10,8 @@ const getUserByID = async (req, res) => {
 }
 
 const getUser = async (req, res) => {
+    console.log(req.cookies.token);
+    
     if (req.cookies.token) {
         const token = req.cookies.token;
         const data = decryptToken(token);
