@@ -105,15 +105,25 @@ const loginUser = async (req, res) => {
 }
 
 const logoutUser = async (req, res) => {
-    if(req.cookies.token){
-        const token = req.cookies.token;
-        const data = decryptToken(token);
-        console.log(data);
-        await userModel.findOneAndUpdate({email: data.email},{isLoggedIn : false})
+    try {
+        if (req.cookies.token) {
+            const token = req.cookies.token;
+            const data = decryptToken(token);
+
+            console.log(data);
+
+            await userModel.findOneAndUpdate(
+                { isLoggedIn: false }
+            );
+        } else {
+            return res.status(400).json({ error: 'No token found, user not logged in.' });
+        }
+
+        res.clearCookie("token").send('Logged Out Successfully');
+    } catch (error) {
+        console.error('Error during logout:', error);
+        res.status(500).json({ error: 'Internal Server Error during logout' });
     }
-    
-    res.clearCookie("token");
-    res.send('Logged Out Successfully');
 }
 
 export { getUserByID, getUser, addUserToDB, removeUserFromDB, loginUser, getUserTest, logoutUser }
