@@ -7,7 +7,6 @@ export const cookieObject = {
 
 export const generateCookie = (maxAgeDays) => {
     const maxAgeMillis = maxAgeDays ? maxAgeDays * 24 * 60 * 60 * 1000 : null;
-    console.log(process.env.NODE_ENV === 'production', 'Generating cookie');
     
     return {
         ...cookieObject,

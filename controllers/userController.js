@@ -5,17 +5,19 @@ import { createToken, decryptToken } from "../helpers/jwt.js";
 import userModel from "../models/userModel.js";
 
 const getUserByID = async (req, res) => {
+    const id = req.params.id;
+    if (!id) {
+        return res.status(400).json({ error: 'User id is required' });
+    }
     const user = await userModel.findById(id);
     res.status(200).json({ user });
 }
 
 const getUser = async (req, res) => {
-    console.log(req.cookies.token);
     
     if (req.cookies.token) {
         const token = req.cookies.token;
         const data = decryptToken(token);
-        console.log(data);
 
         const user = await userModel.findOne({email: data.email});
         res.status(200).json({user});
@@ -31,7 +33,6 @@ const getUserTest = async (req, res) => {
         if(user.name){
             if(comparePassword(password, user.password)){
                 const token = createToken({ email: user.email })
-                console.log(token)
                 
                 res.cookie("token", token, generateCookie())
                 res.send('success')
@@ -56,7 +57,6 @@ const addUserToDB = async (req, res) => {
         res.cookie("token", token, generateCookie())
         res.send('registered Successfully');
     } catch (error) {
-        console.log(error);
 
         res.status(500).json({ error });
     }
@@ -75,7 +75,6 @@ const removeUserFromDB = async (req, res) => {
 //Login user
 const loginUser = async (req, res) => {
     const { email, password, rememberMe } = req.body;
-    console.log(email, password, rememberMe);
     if (email && password) {
         try {
             const user = await userModel.findOne({ email });
@@ -109,8 +108,6 @@ const logoutUser = async (req, res) => {
         if (req.cookies.token) {
             const token = req.cookies.token;
             const data = decryptToken(token);
-
-            console.log(data);
 
             await userModel.findOneAndUpdate(
                 { email: data.email },
