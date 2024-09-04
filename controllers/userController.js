@@ -114,11 +114,13 @@ const logoutUser = async (req, res) => {
                 { email: data.email },
                 { isLoggedIn: false }
             );
+            console.log(generateCookie());
+            
+            res.cookie("token", "", generateCookie()).json({message : 'Logged Out Successfully'});
         } else {
             return res.status(400).json({ error: 'No token found, user not logged in.' });
         }
 
-        res.cookie("token", "", generateCookie()).json({message : 'Logged Out Successfully'});
     } catch (error) {
         console.error('Error during logout:', error);
         res.status(500).json({ error: 'Internal Server Error during logout' });
