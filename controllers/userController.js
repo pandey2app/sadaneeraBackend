@@ -117,7 +117,7 @@ const logoutUser = async (req, res) => {
             return res.status(400).json({ error: 'No token found, user not logged in.' });
         }
 
-        res.cookie("token", "", generateCookie()).send('Logged Out Successfully');
+        res.clearCookie("token", generateCookie()).json({message : 'Logged Out Successfully'});
     } catch (error) {
         console.error('Error during logout:', error);
         res.status(500).json({ error: 'Internal Server Error during logout' });
