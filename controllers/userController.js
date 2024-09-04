@@ -1,4 +1,4 @@
-import { generateCookie } from "../essentials/cookieObject.js";
+import { cookieObject, generateCookie } from "../essentials/cookieObject.js";
 import comparePassword from "../helpers/dcrypt.js";
 import generateHash from "../helpers/encrypt.js";
 import { createToken, decryptToken } from "../helpers/jwt.js";
@@ -117,7 +117,7 @@ const logoutUser = async (req, res) => {
             return res.status(400).json({ error: 'No token found, user not logged in.' });
         }
 
-        res.clearCookie("token").send('Logged Out Successfully');
+        res.clearCookie("token", generateCookie()).send('Logged Out Successfully');
     } catch (error) {
         console.error('Error during logout:', error);
         res.status(500).json({ error: 'Internal Server Error during logout' });
