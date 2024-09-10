@@ -72,10 +72,7 @@ const getAllUsers = async (req, res) => {
 
     if(pipeline.length === 0) {
         pipeline.push({$match :{}});
-    }else{
-        console.log(pipeline)        
     }
-
     try {
         const users = await userModel.aggregate(pipeline);
         res.status(200).json({ users });
