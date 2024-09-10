@@ -16,6 +16,7 @@ const getAllContactForms = async (req, res) => {
 const deleteContactForm = async (req, res) => {
     const { id } = req.params;
 
+    if (!id) return res.status(400).json({ message: "Invalid contact form ID" });
     const deletedContactForm = await contactUsModel.findOneAndDelete({ _id: id});
     res.json(deletedContactForm);
 };
