@@ -25,6 +25,6 @@ const contactUsSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     }
-})
+},{Timestamp: true})
 
 export default mongoose.model('contactUsForm', contactUsSchema)
