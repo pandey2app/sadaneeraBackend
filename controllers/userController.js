@@ -1,4 +1,4 @@
-import { cookieObject, generateCookie } from "../essentials/cookieObject.js";
+import { generateCookie } from "../essentials/cookieObject.js";
 import comparePassword from "../helpers/dcrypt.js";
 import generateHash from "../helpers/encrypt.js";
 import { createToken, decryptToken } from "../helpers/jwt.js";
@@ -50,10 +50,10 @@ const getUserTest = async (req, res) => {
 
 const addUserToDB = async (req, res) => {
     try {
-        const { name, email, image, mobile, birthDate, password, gender, state, district, role, userCategory, art, objective, isActive, createdAt, updatedAt } = req.body;
+        const { name, email, image, mobile, birthDate, password, gender, state, district, role, userCategory, art, objective, isActive } = req.body;
         const hashedPSW = generateHash(password)
 
-        const user = await userModel.create({ name, email, image, mobile, birthDate, password: hashedPSW, gender, state, district, role, userCategory, art, objective, isActive, createdAt, updatedAt });
+        const user = await userModel.create({ name, email, image, mobile, birthDate, password: hashedPSW, gender, state, district, role, userCategory, art, objective, isActive });
         const token = createToken({ email: user.email })
         res.cookie("token", token, generateCookie())
         res.send('registered Successfully');
