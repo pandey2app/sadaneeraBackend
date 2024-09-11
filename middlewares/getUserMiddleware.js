@@ -1,5 +1,5 @@
-import { decryptToken } from "../helpers/jwt";
-import userModel from "../models/userModel";
+import { decryptToken } from "../helpers/jwt.js";
+import userModel from "../models/userModel.js";
 
 const getUser = async (req, res, next) => {
     if (!req.cookies.token) {
