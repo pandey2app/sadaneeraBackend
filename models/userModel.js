@@ -3,12 +3,15 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'name must be provided']
+        required: [true, 'name must be provided'],
+        trim: true,
     },
     email: {
         type: String,
         required: [true, 'email must be provided'],
-        unique: true
+        unique: true,
+        lowercase: true,
+        trim: true
     },
     image:{
         type: String,
@@ -40,7 +43,12 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        default: 'member'
+        enum: {
+            values: ["admin", "member", "editor"],
+            message: "The role should be only admin, member, or editor"
+        },
+        default: 'member',
+        lowercase: true,
     },
     userCategory: {
         type: String,
@@ -48,7 +56,8 @@ const userSchema = new mongoose.Schema({
             values: ['reader', 'writer', 'poet', 'actor', 'singer'],
             message : "The category should be only reader, writer, poet, actor, singer"
         },
-        default: 'user'
+        default: 'user',
+        lowercase: true,
     },
     art: {
         type: String,
@@ -65,16 +74,39 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    // createdAt: {
-    //     type: Date,
-    //     default: Date.now
-    // },
-    // updatedAt: {
-    //     type: Date,
-    // }
+    posts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Post'
+        }
+    ],
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Comment'
+        }
+    ],
+    likes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Post'
+        }
+    ],
+    followers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
+    following: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 },{timestamps: true})
 
-const root = 'https://sadaneera-backend.vercel.app'
+const root = process.env.BACKEND_URL
 userSchema.pre('save', function (next) {
     if (!this.image) {
         switch (this.gender) {
