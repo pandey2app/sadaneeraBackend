@@ -1,7 +1,6 @@
 import { uploadToCloudinary } from "../utils/cloudinari.js";
 
 const uploadImageFile = async (req, res) => {
-    console.log('uploading image file', req.file);
     
     if (!req.file.buffer) {
         return res.status(400).send('No file found.');
@@ -10,7 +9,6 @@ const uploadImageFile = async (req, res) => {
     if (!req.file.mimetype.startsWith('image/')) {
         return res.status(400).send('Only image files are allowed.');
     }
-    console.log('uploading image passed type');
     
     try {
         let cloudineryImage = '';
@@ -18,7 +16,6 @@ const uploadImageFile = async (req, res) => {
         if (req.file.buffer) {
             cloudineryImage = await uploadToCloudinary(req.file)
         }
-        console.log(cloudineryImage);
         
 
         if (!cloudineryImage.secure_url) {
