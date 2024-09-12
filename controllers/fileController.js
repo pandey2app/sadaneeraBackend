@@ -1,6 +1,8 @@
 import { uploadToCloudinary } from "../utils/cloudinari.js";
 
 const uploadImageFile = async (req, res) => {
+    console.log('uploading image file', req.file);
+    
     if (!req.file) {
         return res.status(400).send('No file found.');
     }
