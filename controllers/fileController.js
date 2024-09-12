@@ -15,12 +15,14 @@ const uploadImageFile = async (req, res) => {
         if (req.file.path) {
             cloudineryImage = await uploadToCloudinary(req.file)
         }
+        console.log(cloudineryImage);
+        
 
-        if (!cloudineryImage.url) {
+        if (!cloudineryImage.secure_url) {
             return res.status(500).send({ message: 'Cloudinary upload failed' });
         }
         
-        return res.status(201).json({ url: cloudineryImage.url});
+        return res.status(201).json({ url: cloudineryImage.secure_url});
     } catch (error) {
         return res.status(500).json({"error": error });
     }
