@@ -3,7 +3,7 @@ import { uploadToCloudinary } from "../utils/cloudinari.js";
 const uploadImageFile = async (req, res) => {
     console.log('uploading image file', req.file);
     
-    if (!req.file) {
+    if (!req.file.buffer) {
         return res.status(400).send('No file found.');
     }
     
@@ -14,7 +14,7 @@ const uploadImageFile = async (req, res) => {
     try {
         let cloudineryImage = '';
 
-        if (req.file.path) {
+        if (req.file.buffer) {
             cloudineryImage = await uploadToCloudinary(req.file)
         }
         console.log(cloudineryImage);
