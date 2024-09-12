@@ -1,13 +1,16 @@
+import mongoose from "mongoose";
 import { Post } from "../models/postModel.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 // Create a new post
 const createPost = async (req, res) => {
     const { title, content, tags, image } = req.body;
 
-    if (!title || !content) {
+    if ([title, content].some(field=> field?.trim() === "")) {
         return res.status(400).json({ error: 'Title and content are required' });
     }
-
+    
+    
     try {
         const newPost = await Post.create({
             title,
@@ -17,7 +20,7 @@ const createPost = async (req, res) => {
             author: req.user._id
         });
 
-        return res.status(201).json({ message: 'Post added successfully', newPost });
+        return res.status(201).json(new ApiResponse(201, newPost, "Post added successfully"));
     } catch (error) {
         return res.status(500).json({ error: 'Server error while creating post' });
     }
@@ -35,12 +38,16 @@ const getAllPosts = async (req, res) => {
 
 // Get post by ID
 const getPostById = async (req, res) => {
-    if (!req.params.id) {
-        return res.status(400).json({ error: 'Post ID is required' });
+    const { id } = req.params;
+    console.log(id);
+    
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: 'Invalid or missing Post ID' });
     }
 
     try {
-        const post = await Post.findById(req.params.id).populate('author', 'name email').exec();
+        const post = await Post.findById(id).populate('author', 'name email').exec();
 
         if (!post) {
             return res.status(404).json({ error: 'Post not found' });

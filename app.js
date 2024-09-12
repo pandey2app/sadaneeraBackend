@@ -24,6 +24,7 @@ import users_routes from'./routes/usersRouter.js'
 import user_routes from'./routes/userRouter.js'
 import contactUs_routes from'./routes/contactUsRouter.js'
 import post_routes from'./routes/postRouter.js'
+import file_routes from'./routes/fileRouter.js'
 
 app.get('/', (req, res) => {
     res.send('okay im live')
@@ -33,5 +34,6 @@ app.use('/api/users', users_routes)
 app.use('/api/user', user_routes)
 app.use('/api/contactUs', contactUs_routes)
 app.use('/api/post', post_routes)
+app.use('/api/file', file_routes)
 
 export default app;
