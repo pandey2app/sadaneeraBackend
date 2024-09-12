@@ -10,6 +10,7 @@ const uploadImageFile = async (req, res) => {
     if (!req.file.mimetype.startsWith('image/')) {
         return res.status(400).send('Only image files are allowed.');
     }
+    console.log('uploading image passed type');
     
     try {
         let cloudineryImage = '';
