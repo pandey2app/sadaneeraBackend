@@ -55,7 +55,9 @@ cloudinary.config({
 });
 
 const uploadToCloudinary = async (file) => {
+    console.log(file.buffer , "buffer");
     if (!file.buffer) return null;
+    
 
     try {
         const result = await new Promise((resolve, reject) => {
